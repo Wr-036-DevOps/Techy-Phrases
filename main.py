@@ -1,7 +1,7 @@
 import requests
 import yaml
 import json
-from flask import Flask
+from flask import Flask, render_template
 
 api_link = "https://techy-api.vercel.app/api/json"
 app = Flask(__name__)
@@ -19,7 +19,8 @@ def json_to_yaml():
     return(yaml_reponse)
 
 @app.route('/')
-def techy_phrase():
-    return(json_to_yaml())
+def index():
+    return render_template(f'index.html', variable=json_to_yaml() )
     
-app.run()
+if __name__ == "__main__":
+    app.run(debug=True)
