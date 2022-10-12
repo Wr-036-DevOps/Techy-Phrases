@@ -2,9 +2,14 @@ import requests
 import yaml
 import json
 from flask import Flask, render_template
+import sqlite3
+
+
 
 api_link = "https://techy-api.vercel.app/api/json"
 app = Flask(__name__)
+
+
 
 def get_response():
     request = requests.get(api_link)
@@ -18,9 +23,27 @@ def json_to_yaml():
     yaml_reponse = (yaml_response.read())
     return(yaml_reponse)
 
+
+
+
 @app.route('/')
 def index():
-    return render_template(f'index.html', variable=json_to_yaml() )
+    conn = sqlite3.connect('database.db')
+    cur = conn.cursor()
+    content = (f"{json_to_yaml()}")
+    def create_table():
+        cur.execute('CREATE TABLE IF NOT EXISTS tech_phrases (id INTEGER PRIMARY KEY AUTOINCREMENT, created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, content TEXT NOT NULL);')
+
+    def data_entry():
+        
+        cur.execute("INSERT INTO tech_phrases (content) VALUES(?)",
+                                                        (content,))
+        conn.commit()
+    create_table()
+    data_entry()
+    cur.close()
+    conn.close()
+    return render_template(f'index.html', variable=(content))
     
 if __name__ == "__main__":
     app.run(debug=True)
