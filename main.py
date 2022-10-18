@@ -14,14 +14,9 @@ app = Flask(__name__)
 def get_response():
     request = requests.get(api_link)
     json_response = request.json()
-    return(json_response)
+    yaml_response = yaml.dump(json_response, default_flow_style=False)
+    return(yaml_response)
 
-def json_to_yaml():
-    yaml_file = open('response.yaml', 'w')
-    yaml.dump(get_response(), yaml_file, default_flow_style=False)
-    yaml_response = open('response.yaml', mode='r')
-    yaml_reponse = (yaml_response.read())
-    return(yaml_reponse)
 
 
 
@@ -30,7 +25,7 @@ def json_to_yaml():
 def index():
     conn = sqlite3.connect('database.db')
     cur = conn.cursor()
-    content = (f"{json_to_yaml()}")
+    content = (get_response())
     def create_table():
         cur.execute('CREATE TABLE IF NOT EXISTS tech_phrases (id INTEGER PRIMARY KEY AUTOINCREMENT, created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, content TEXT NOT NULL);')
 
