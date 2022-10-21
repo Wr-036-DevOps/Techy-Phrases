@@ -2,7 +2,9 @@ import requests
 import yaml
 import json
 from flask import Flask, render_template
-import sqlite3
+import mysql.connector
+import variables
+
 
 
 
@@ -19,25 +21,26 @@ def get_response():
 
 
 
-
-
 @app.route('/')
 def index():
-    conn = sqlite3.connect('database.db')
-    cur = conn.cursor()
+    mydb = mysql.connector.connect(
+        host=variables.host,
+        user=variables.user,
+        password=variables.password,
+        database=variables.database
+        )   
+    mycursor = mydb.cursor()
+    mycursor.execute("CREATE TABLE IF NOT EXISTS tech_phrases (ID INT AUTO_INCREMENT PRIMARY KEY, CREATED TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, CONTENT TEXT NOT NULL)")
     content = (get_response())
-    def create_table():
-        cur.execute('CREATE TABLE IF NOT EXISTS tech_phrases (id INTEGER PRIMARY KEY AUTOINCREMENT, created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, content TEXT NOT NULL);')
+    
 
     def data_entry():
-        
-        cur.execute("INSERT INTO tech_phrases (content) VALUES(?)",
-                                                        (content,))
-        conn.commit()
-    create_table()
+        sql = "INSERT INTO tech_phrases (content) VALUES(%s)"
+        val = [(content)]
+        mycursor.execute(sql, val)
+        mydb.commit()
     data_entry()
-    cur.close()
-    conn.close()
+    mydb.close()
     return render_template(f'index.html', variable=(content))
     
 if __name__ == "__main__":
