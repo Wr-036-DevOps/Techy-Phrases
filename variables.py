@@ -1,5 +1,5 @@
 
 host="localhost"
 user="root"
-password="password2022"
-database="phrasedb"
+password="YOUR PASSWORD"
+database="YOUR DATABASE NAME"
