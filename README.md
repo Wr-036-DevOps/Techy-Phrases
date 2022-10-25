@@ -25,3 +25,12 @@ To Run Publicly (Cloud, AWS) (Monolith setup):
 10. replace or edit the nginx default config file with the "default" file in the repo
 11. restart nginx "$ sudo systemctl restart nginx"
 12. instance IP should return flask application
+
+To Run Publicly (Cloud, AWS) (multi tier setup):
+Assuming all infrastructure for a three tier architecture is already setup which includes a vpc with public and private subnets, ec2 server and database instance both in their respective subnets (pub and priv), and proper security groups and rules to enable communitction between both resources.
+Basically the previous steps as aboove only change is;
+1. Changing the value of your host in the variables.py file to the endpoint of your rds database
+2. restarting the flaskapp.service using "$ systemctl restart flaskapp.service"
+3. to check the records of your rds datatbase, using mysql command line use 
+"mysql -h RDS_DATABASE_ENDPOINT -P 3306 -u USERNAME -p"
+4. Query the database as normal using sql commands 
