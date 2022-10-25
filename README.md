@@ -16,15 +16,16 @@ To Run Publicly (Cloud, AWS) (Monolith setup):
 1. Assuming the cloud infrastructure has been setup already (VPC, SUBNETS and internet gateways etc)
 2. Install  mysql server
 3. Create and activate a python environment and install all dependables using "$ pip install -r requirements.txt"
-4. install gunicorn "$ pip install gunicorn"
-5. Run "$ gunicorn -b 0.0.0.0:8000 main:app" and exit gunicorn 
-6. move the flaskapp.service unit file to the folder /etc/systemd/system/
-7. enable the service 
-8. Install Nginx webserver to act as a reverse proxy accepting requests and routing to gunicorn "$ sudo apt-get nginx" 
-9. start and enable nginx with these commands "$ sudo systemctl start nginx" "$ sudo systemctl enable nginx"  the instance public IP should return nginx home page at this point 
-10. replace or edit the nginx default config file with the "default" file in the repo
-11. restart nginx "$ sudo systemctl restart nginx"
-12. instance IP should return flask application
+4. Run the mysql_connection_init.py to create a database (edit variables.py to match your db configuraton)
+5. install gunicorn "$ pip install gunicorn"
+6. Run "$ gunicorn -b 0.0.0.0:8000 main:app" and exit gunicorn 
+7. move the flaskapp.service unit file to the folder /etc/systemd/system/
+8. enable the service 
+9. Install Nginx webserver to act as a reverse proxy accepting requests and routing to gunicorn "$ sudo apt-get nginx" 
+10. start and enable nginx with these commands "$ sudo systemctl start nginx" "$ sudo systemctl enable nginx"  the instance public IP should return nginx home page at this point 
+11. replace or edit the nginx default config file with the "default" file in the repo
+12. restart nginx "$ sudo systemctl restart nginx"
+13. instance IP should return flask application
 
 To Run Publicly (Cloud, AWS) (multi tier setup):
 Assuming all infrastructure for a three tier architecture is already setup which includes a vpc with public and private subnets, ec2 server and database instance both in their respective subnets (pub and priv), and proper security groups and rules to enable communitction between both resources.
